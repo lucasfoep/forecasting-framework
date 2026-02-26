@@ -1,38 +1,106 @@
-\# forecasting-framework
+# Forecasting Framework
 
+A modular time-series forecasting framework built to support reproducible modeling and disciplined walk-forward validation.
 
+The framework simulates real-world forecasting deployment scenarios, enforcing forward-only prediction and realistic out-of-sample evaluation.
 
-A small, production-shaped forecasting/backtesting framework focused on \*\*time-aware evaluation\*\* (walk-forward / expanding window) and \*\*modular model interfaces\*\*.
+---
 
+## Why This Framework Exists
 
+Many forecasting workflows rely on static train/test splits or standard cross-validation techniques that introduce temporal leakage or unrealistic evaluation assumptions.
 
-\## What it demonstrates
+This framework enforces strict temporal discipline to better approximate real production forecasting behavior, where only historical data is available at prediction time.
 
-\- \*\*Walk-forward backtesting\*\* (expanding window) for time series
+---
 
-\- Clean \*\*model interface\*\* (`fit` / `predict`) + \*\*registry pattern\*\*
+## Objective
 
-\- Reproducible project setup (src layout + `pyproject.toml`)
+Provide a structured pipeline for:
 
-\- A runnable demo using a synthetic dataset (no proprietary data)
+- Training forecasting models without data leakage  
+- Expanding-window (walk-forward) validation  
+- Clear separation between data preparation, modeling, and evaluation  
+- Reproducible experimentation  
 
+---
 
+## Design Principles
 
-\## Quickstart
+- Strict forward-only validation (no future leakage)
+- Modular architecture
+- Explicit train/test window control
+- Config-driven experimentation
+- Transparent and window-level performance evaluation
 
-```bash
+---
 
-python -m venv .venv
+## Validation Strategy
 
-\# Windows PowerShell:
+Expanding-window validation:
 
-.\\.venv\\Scripts\\Activate.ps1
+Train: months 1…n  
+Test: month n+1  
 
+Then expand:
 
+Train: months 1…n+1  
+Test: month n+2  
 
-python -m pip install -r requirements.txt
+Each validation window simulates a real forecasting cycle where only historical information is available at prediction time.
 
-python -m pip install -e .
+This approach mirrors production forecasting environments and prevents look-ahead bias.
 
-python scripts/run\_backtest.py
+---
 
+## Model Implemented
+
+- **XGBoost Regressor**
+
+The framework prioritizes structural integrity and validation rigor over model complexity or hyperparameter tuning.
+
+---
+
+## Evaluation Metric
+
+Model performance is evaluated using:
+
+- **MAPE (Mean Absolute Percentage Error)**
+
+MAPE is computed independently for each validation window and aggregated across windows to summarize out-of-sample forecasting performance.
+
+---
+
+## Project Structure
+
+```
+forecasting-framework/
+│
+├── pyproject.toml
+├── requirements.txt
+├── README.md
+├── scripts/
+│   └── run_backtest.py
+└── src/
+    └── forecasting_framework/
+        ├── config/
+        │   └── settings.py
+        ├── data/
+        ├── models/
+        │   └── xgboost_model.py
+        ├── validation/
+        │   └── walk_forward.py
+        └── registry.py
+```
+
+---
+
+## Structure Rationale
+
+- `src/` layout ensures the framework behaves like an installed package.
+- `registry.py` allows models to be swapped without modifying validation logic.
+- `validation/` enforces forward-only evaluation.
+- `config/` centralizes experiment configuration.
+- `scripts/` contains runnable entry points, separate from library code.
+
+This separation supports reproducibility, extensibility, and production-aligned experimentation.
