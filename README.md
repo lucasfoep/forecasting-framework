@@ -1,16 +1,12 @@
 # Forecasting Framework
 
-A modular time-series forecasting framework built to support reproducible modeling and disciplined walk-forward validation.
-
-The framework simulates real-world forecasting deployment scenarios, enforcing forward-only prediction and realistic out-of-sample evaluation.
+A modular time-series forecasting framework built to support reproducible modeling and disciplined walk-forward validation. The framework simulates real-world forecasting deployment scenarios, enforcing forward-only prediction and realistic out-of-sample evaluation.
 
 ---
 
 ## Why This Framework Exists
 
-Many forecasting workflows rely on static train/test splits or standard cross-validation techniques that introduce temporal leakage or unrealistic evaluation assumptions.
-
-This framework enforces strict temporal discipline to better approximate real production forecasting behavior, where only historical data is available at prediction time.
+Many forecasting workflows rely on static train/test splits or standard cross-validation techniques that introduce temporal leakage or unrealistic evaluation assumptions. This framework enforces strict temporal discipline to better approximate real production forecasting behavior, where only historical data is available at prediction time.
 
 ---
 
